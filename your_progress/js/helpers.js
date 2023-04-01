@@ -66,49 +66,56 @@
 function translateProblemMappings(data) {
     function translateLanguageEntry(name, dirname, data) {
         let lang_field = Object.keys(data).find(x => x.startsWith(name));
+
         if (!lang_field) {
             console.log(`Can't find ${name} entry in ${data}`);
             return null
         }
+        
         data = data[lang_field];
         data.filename = dirname + lang_field.split(" ")[1];
+        
         return data
     }
 
     function translateProblem(name, data) {
-        let result = {
-            name: name,
-            cpp: translateLanguageEntry('C++', 'epi_judge_cpp/', data),
-            java: translateLanguageEntry('Java', 'epi_judge_java/epi/', data),
-            python: translateLanguageEntry('Python', 'epi_judge_python/', data)
-        };
-        if (result.cpp || result.java || result.python) {
+        let result = {name};
+
+        ALL_LANGUAGES.forEach((lang, index) => {
+            result[lang] = translateLanguageEntry(
+                PROPER_NAMES[index],
+                `epi_judge_${lang}/`,
+                data
+            );
+        });
+
+        if (ALL_LANGUAGES.find((lang) => result[lang])) {
             return result;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     function translateChapter(chapter_name, chapter_data) {
         let problems = [];
-        let progress = {
-            cpp: 0,
-            java: 0,
-            python: 0
-        };
-        for (let problem in chapter_data) {
+        
+        let progress = {};
+
+        for (const lang of ALL_LANGUAGES) {
+            progress[lang] = 0;
+        }
+
+        for (const problem in chapter_data) {
             if (chapter_data.hasOwnProperty(problem) && chapter_data[problem]) {
                 let result = translateProblem(problem, chapter_data[problem]);
+                
                 if (result) {
                     problems.push(result);
-                    if (result.cpp.passed === result.cpp.total) {
-                        progress.cpp += 1;
-                    }
-                    if (result.java.passed === result.java.total) {
-                        progress.java += 1;
-                    }
-                    if (result.python.passed === result.python.total) {
-                        progress.python += 1;
+
+                    for (const lang of ALL_LANGUAGES) {
+                        if (result[lang].passed === result[lang].total) {
+                            progress[lang] += 1;
+                        }
                     }
                 }
             }

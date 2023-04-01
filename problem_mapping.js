@@ -1,24 +1,24 @@
-{
+problem_mapping = {
   "Chapter 04: Primitive Types": {
     "4.00 Bootcamp: Primitive Types": {
       "C++: count_bits.cc": {
-        "passed": 0,
+        "passed": 10001,
         "total": 10001
       },
       "Java: CountBits.java": {
-        "passed": 0,
+        "passed": 10001,
         "total": 10001
       },
       "Python: count_bits.py": {
-        "passed": 0,
+        "passed": 10001,
         "total": 10001
       },
       "Kotlin: CountBits.kt": {
-        "passed": 0,
+        "passed": 10001,
         "total": 10001
       },
       "Rust: count_bits.rs": {
-        "passed": 0,
+        "passed": 10001,
         "total": 10001
       }
     },

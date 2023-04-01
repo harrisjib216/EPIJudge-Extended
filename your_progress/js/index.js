@@ -5,8 +5,6 @@
 // [ ] links
 const EPI_DATA = translateProblemMappings(problem_mapping);
 
-const ALL_LANGUAGES = ['cpp', 'java', 'python'];
-
 Vue.component('donut', {
     props: ['x', 'size', 'width', 'rad', 'lineWidth', 'font'],
     template: `
@@ -191,12 +189,20 @@ Vue.component('lang-enabler', {
 const epi = new Vue({
     el: '#epijudge-app',
     data: function () {
+        let langs_enabled = {};
+        let langs_displayname = {};
+
+        for (const index in ALL_LANGUAGES) {
+            langs_enabled[ALL_LANGUAGES[index]] = true;
+            langs_displayname[ALL_LANGUAGES[index]] = PROPER_NAMES[index];
+        }
+
         return {
             chapters: EPI_DATA,
             selected_chapter: null,
             all_langs: ALL_LANGUAGES,
-            langs_enabled: {"cpp": true, "java": true, "python": true},
-            langs_displayname: {"cpp": "C++", "java": "Java", "python": "Python"}
+            langs_enabled,
+            langs_displayname,
         }
     },
     computed: {
@@ -242,6 +248,7 @@ function safeStorageGet(key) {
     return undefined;
 }
 
+// todo
 function getColor(x) {
     if (x === 1) {
         return '#558b2f';
@@ -261,12 +268,14 @@ function drawArk(el, x) {
 
     ctx.clearRect(0, 0, el.width, el.height);
     ctx.lineWidth = el.getAttribute("lineWidth");
+    
     if (x > 0) {
         ctx.beginPath();
         ctx.strokeStyle = getColor(x);
         ctx.arc(w / 2, h / 2, rad, -0.5 * Math.PI, p * Math.PI, false);
         ctx.stroke();
     }
+    
     if (x < 1) {
         ctx.beginPath();
         ctx.strokeStyle = '#eaeaea';
